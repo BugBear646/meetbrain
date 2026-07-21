@@ -14,7 +14,7 @@
 Meeting intelligence for sales teams: prep in 5 minutes, capture in 30 seconds, and every meeting makes the next one smarter.
 Two surfaces, one shared brain:
 
-- **Rep view** (`/`) - pick a prospect, get a brief tailored to the meeting type and everything past calls taught us, see a triage verdict on whether the meeting should happen at all, paste notes after.
+- **Rep view** (`/rep`) - pick a prospect, get a brief tailored to the meeting type and everything past calls taught us, see a triage verdict on whether the meeting should happen at all, paste notes after.
 - **Manager view** (`/manager`) - pipeline health scored from what actually happened in meetings: advancing vs stalling deals, meetings that should not have been booked, per-rep coaching signals.
 
 ## Architecture
