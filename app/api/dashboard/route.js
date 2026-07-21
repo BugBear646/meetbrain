@@ -3,6 +3,8 @@ import { db } from '@/lib/supabase';
 import { daysSinceLastMeeting } from '@/lib/scoring';
 
 export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+export const fetchCache = 'force-no-store';
 
 // GET /api/dashboard - manager aggregate. ZERO LLM calls: everything here is
 // a read of precomputed signals, so it loads instantly and never rate-limits.
