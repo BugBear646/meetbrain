@@ -1,12 +1,14 @@
 # Meetbrain
 
 <div align="center">
-![Next.js](https://img.shields.io/badge/Next.js-14-black?style=for-the-badge&logo=next.js)
-![Supabase](https://img.shields.io/badge/Supabase-Postgres-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white)
-![Groq](https://img.shields.io/badge/Groq-LLM_primary-F55036?style=for-the-badge)
-![OpenRouter](https://img.shields.io/badge/OpenRouter-LLM_fallback-6366F1?style=for-the-badge)
-![Jina Reader](https://img.shields.io/badge/Jina_Reader-Scraper-FFA500?style=for-the-badge)
-![Vercel](https://img.shields.io/badge/Vercel-Hosting-black?style=for-the-badge&logo=vercel)
+
+[![Next.js](https://img.shields.io/badge/Next.js-14-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
+[![Supabase](https://img.shields.io/badge/Supabase-Postgres-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white)](https://supabase.com/)
+[![Groq](https://img.shields.io/badge/Groq-LLM_primary-F55036?style=for-the-badge)](https://groq.com/)
+[![OpenRouter](https://img.shields.io/badge/OpenRouter-LLM_fallback-6366F1?style=for-the-badge)](https://openrouter.ai/)
+[![Jina Reader](https://img.shields.io/badge/Jina_Reader-Scraper-FFA500?style=for-the-badge)](https://jina.ai/reader/)
+[![Vercel](https://img.shields.io/badge/Vercel-Hosting-black?style=for-the-badge&logo=vercel)](https://vercel.com/)
+
 </div>
 
 Meeting intelligence for sales teams: prep in 5 minutes, capture in 30 seconds, and every meeting makes the next one smarter.
