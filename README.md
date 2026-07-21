@@ -2,12 +2,36 @@
 
 Meeting intelligence for sales teams: prep in 5 minutes, capture in 30 seconds, and every meeting makes the next one smarter.
 
+`Next.js 14` `App Router` `Supabase (Postgres)` `Groq` `OpenRouter` `Jina Reader` `Vercel` `Zero-LLM dashboard`
+
 Two surfaces, one shared brain:
 
 - **Rep view** (`/`) - pick a prospect, get a brief tailored to the meeting type and everything past calls taught us, see a triage verdict on whether the meeting should happen at all, paste notes after.
 - **Manager view** (`/manager`) - pipeline health scored from what actually happened in meetings: advancing vs stalling deals, meetings that should not have been booked, per-rep coaching signals.
 
-## Deploy (about 15 minutes, $0)
+## Architecture
+
+<img src="docs/architecture.png" alt="Meetbrain architecture diagram" width="680">
+
+- **Rep view / Manager view** - the two frontends; same backend, same database.
+- **prospects** - creates and lists prospects (this is the entry point for adding a brand-new company by URL).
+- **brief** - reads `memory` + meeting history, generates meeting-type-specific prep via the LLM chain.
+- **triage** - scrapes `company_url` live via Jina Reader, runs a proceed/caution/dont_book verdict through the LLM, caches it until new notes invalidate it.
+- **ingest** - takes pasted call notes, extracts structured facts via the LLM, merges into `memory` (newer facts win, open objections never silently dropped), recomputes the deal signal.
+- **dashboard** - pure read of what `ingest` already computed - no LLM calls, so it never flakes.
+- **lib/scoring.js** - deterministic rules (recency, booked next steps, open objections) that turn meeting history into `advancing` / `stalling` / `at_risk`.
+- **Supabase** - the shared brain: `memory` (merged, durable facts) plus raw `meetings.notes` for audit.
+- **Jina Reader** - free, keyless scraper, called only by triage, fails quietly after 8s.
+- **Groq → OpenRouter** - the only LLM calls in the system, used by brief/triage/ingest; if both fail, briefs and triage render deterministically from `memory` instead of breaking.
+
+### Run locally (optional)
+```bash
+cp .env.example .env.local   # fill in the same 4 values
+npm install
+npm run dev                  # http://localhost:3000
+```
+
+## Steps to Deploy (~ 15 minutes, $0)
 
 ### 1. Database (Supabase)
 1. In your Supabase project, open **SQL Editor -> New query**.
@@ -36,14 +60,10 @@ git push -u origin main
 | `GROQ_API_KEY` | from console.groq.com |
 | `OPENROUTER_API_KEY` | from openrouter.ai (optional but recommended fallback) |
 
+Or you can copy paste your .env.local file directly there to pull the variables.
+
 4. Click **Deploy**. Your public URL is live in ~2 minutes; both views work immediately with seeded data.
 
-### Run locally (optional)
-```bash
-cp .env.example .env.local   # fill in the same 4 values
-npm install
-npm run dev                  # http://localhost:3000
-```
 
 ## Tool inventory & free-tier limits (what breaks first)
 
@@ -73,3 +93,11 @@ lib/                  llm chain, prompts, scoring rules, fallbacks
 supabase/schema.sql   tables + seed (paste into SQL Editor)
 ONEPAGER.md           tradeoffs, production metrics, week-2 plan
 ```
+
+## Beyond sales
+ 
+Meetbrain is built for enterprise sales teams here, but nothing in the core loop - brief before, triage in between, memory after - is specific to selling. The same shape fits any recurring, high-stakes conversation where context needs to survive from one meeting to the next: customer discovery interviews, account management and renewals, recruiting pipelines, consulting engagements, even investor or partnership conversations. Swap "prospect" for "candidate" or "interviewee," and the same brief/triage/ingest loop holds.
+ 
+If this is a shape you'd want for a different use case, I'd genuinely enjoy exploring it - feel free to reach out.
+ 
+If this is useful to you, a star helps others find it - and pull requests are always welcome.
