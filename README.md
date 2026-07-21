@@ -1,17 +1,22 @@
 # Meetbrain
 
+<div align="center">
+![Next.js](https://img.shields.io/badge/Next.js-14-black?style=for-the-badge&logo=next.js)
+![Supabase](https://img.shields.io/badge/Supabase-Postgres-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white)
+![Groq](https://img.shields.io/badge/Groq-LLM_primary-F55036?style=for-the-badge)
+![OpenRouter](https://img.shields.io/badge/OpenRouter-LLM_fallback-6366F1?style=for-the-badge)
+![Jina Reader](https://img.shields.io/badge/Jina_Reader-Scraper-FFA500?style=for-the-badge)
+![Vercel](https://img.shields.io/badge/Vercel-Hosting-black?style=for-the-badge&logo=vercel)
+</div>
+
 Meeting intelligence for sales teams: prep in 5 minutes, capture in 30 seconds, and every meeting makes the next one smarter.
-
-`Next.js 14` `App Router` `Supabase (Postgres)` `Groq` `OpenRouter` `Jina Reader` `Vercel` `Zero-LLM dashboard`
-
 Two surfaces, one shared brain:
 
 - **Rep view** (`/`) - pick a prospect, get a brief tailored to the meeting type and everything past calls taught us, see a triage verdict on whether the meeting should happen at all, paste notes after.
 - **Manager view** (`/manager`) - pipeline health scored from what actually happened in meetings: advancing vs stalling deals, meetings that should not have been booked, per-rep coaching signals.
 
 ## Architecture
-
-<img src="docs/architecture.png" alt="Meetbrain architecture diagram" width="680">
+<img src="docs/meetbrain_architecture.png" alt="Meetbrain architecture diagram" width="680">
 
 - **Rep view / Manager view** - the two frontends; same backend, same database.
 - **prospects** - creates and lists prospects (this is the entry point for adding a brand-new company by URL).
