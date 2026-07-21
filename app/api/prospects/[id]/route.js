@@ -1,3 +1,6 @@
+//Author: Aniket Jha
+//URL: https://github.com/BugBear646/meetbrain
+
 import { NextResponse } from 'next/server';
 import { db } from '@/lib/supabase';
 

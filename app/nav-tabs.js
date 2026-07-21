@@ -1,3 +1,6 @@
+//Author: Aniket Jha
+//URL: https://github.com/BugBear646/meetbrain
+
 'use client';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';

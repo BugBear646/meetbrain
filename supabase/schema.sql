@@ -1,3 +1,6 @@
+--Author: Aniket Jha
+--URL: https://github.com/BugBear646/meetbrain
+
 -- Meetbrain schema + seed data
 -- Paste this entire file into Supabase SQL Editor and click Run.
 -- Safe to re-run: drops and recreates everything.

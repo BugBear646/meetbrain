@@ -1,3 +1,6 @@
+//Author: Aniket Jha
+//URL: https://github.com/BugBear646/meetbrain
+
 'use client';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';

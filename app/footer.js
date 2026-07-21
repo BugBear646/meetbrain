@@ -1,3 +1,6 @@
+//Author: Aniket Jha
+//URL: https://github.com/BugBear646/meetbrain
+
 import Link from 'next/link';
 import { APP_NAME } from '@/lib/config';
 

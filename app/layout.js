@@ -1,3 +1,6 @@
+//Author: Aniket Jha
+//URL: https://github.com/BugBear646/meetbrain
+
 import './globals.css';
 import Link from 'next/link';
 import NavTabs from './nav-tabs';
