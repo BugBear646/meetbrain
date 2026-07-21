@@ -6,6 +6,7 @@ import Link from 'next/link';
 import NavTabs from './nav-tabs';
 import ThemeToggle from './theme-toggle';
 import Footer from './footer';
+import { Analytics } from '@vercel/analytics/next';
 import { APP_NAME } from '@/lib/config';
 
 export const metadata = {
@@ -41,6 +42,7 @@ export default function RootLayout({ children }) {
         {children}
         </div>
         <Footer />
+        <Analytics />
       </body>
     </html>
   );
