@@ -6,7 +6,7 @@ const AUTHOR = {
   email: 'aniketjha646@gmail.com',
   socials: {
     linkedin: 'https://linkedin.com/in/aniketjha646',
-    github: 'https://github.com/bugbear646',
+    github: 'https://github.com/bugbear646/meetbrain',
     twitter: 'https://x.com/aniketjha_2651',
   },
 };
