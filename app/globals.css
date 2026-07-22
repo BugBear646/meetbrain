@@ -245,8 +245,8 @@ td { padding: 12px 14px; border-bottom: 1px solid var(--line); vertical-align: t
 tr:last-child td { border-bottom: none; }
 .del-btn {
   background: transparent; border: 1px solid var(--line); color: var(--muted);
-  border-radius: 6px; width: 26px; height: 26px; font-size: 13px; line-height: 1;
-  cursor: pointer; transition: all 0.15s ease;
+  border-radius: 6px; width: 28px; height: 28px; display: inline-flex;
+  align-items: center; justify-content: center; cursor: pointer; transition: all 0.15s ease;
 }
 .del-btn:hover:not(:disabled) { border-color: var(--bad); color: var(--bad); background: var(--bad-bg); }
 .del-btn:disabled { opacity: 0.5; cursor: default; }
