@@ -157,6 +157,8 @@ h1 { font-size: 26px; letter-spacing: -0.02em; margin: 0 0 4px; }
   font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em;
   text-transform: uppercase; color: var(--muted); margin: 0 0 6px;
 }
+.src-ok { color: var(--good); }
+.src-none { color: var(--muted); }
 .row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
 .spread { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
 .meta { color: var(--muted); font-size: 13.5px; }

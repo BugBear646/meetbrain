@@ -154,7 +154,13 @@ export default function Workspace({ params }) {
           {brief.degraded && (
             <div className="degraded-note">AI is busy - showing your stored intel directly. Everything below is from past calls, nothing is generated.</div>
           )}
-          <p className="label">Your brief · {meetingType}</p>
+          <p className="label">
+            Your brief · {meetingType}
+            {' · '}
+            <span className={brief.used_website ? 'src-ok' : 'src-none'}>
+              {brief.used_website ? 'used live company website' : 'no company website used'}
+            </span>
+          </p>
           <p className="brief-headline">{brief.headline}</p>
 
           <div className="brief-section">
