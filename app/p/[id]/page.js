@@ -38,8 +38,12 @@ export default function Workspace({ params }) {
       if (!res.ok) throw new Error(d.error);
       setData(d);
       if (d.prospect.rep_name) setRepName(d.prospect.rep_name);
-      const stageToType = { discovery: 'discovery', demo: 'demo', closing: 'closing' };
-      if (stageToType[d.prospect.stage]) setMeetingType(stageToType[d.prospect.stage]);
+      if (d.meetings.length === 0) {
+        setMeetingType('discovery');
+      } else {
+        const stageToType = { discovery: 'discovery', demo: 'demo', closing: 'closing' };
+        if (stageToType[d.prospect.stage]) setMeetingType(stageToType[d.prospect.stage]);
+      }
     } catch (e) {
       setError(e.message || 'Could not load this prospect.');
     }
@@ -119,10 +123,25 @@ export default function Workspace({ params }) {
         <div className="field">
           <label>What kind of meeting is this?</label>
           <div className="pills" role="group" aria-label="Meeting type">
-            {['discovery', 'demo', 'closing'].map((t) => (
-              <button key={t} type="button" className={`pill ${meetingType === t ? 'on' : ''}`} onClick={() => setMeetingType(t)}>{t}</button>
-            ))}
+            {['discovery', 'demo', 'closing'].map((t) => {
+              const locked = data.meetings.length === 0 && t !== 'discovery';
+              return (
+                <button
+                  key={t}
+                  type="button"
+                  className={`pill ${meetingType === t ? 'on' : ''} ${locked ? 'disabled' : ''}`}
+                  disabled={locked}
+                  title={locked ? 'Not available yet - this is the first meeting, so it can only be a discovery call' : undefined}
+                  onClick={() => setMeetingType(t)}
+                >
+                  {t}
+                </button>
+              );
+            })}
           </div>
+          {data.meetings.length === 0 && (
+            <p className="hint">First meeting with this prospect - only discovery is available until there's call history.</p>
+          )}
         </div>
         <div className="field">
           <label htmlFor="rep">Who&apos;s running the call?</label>
