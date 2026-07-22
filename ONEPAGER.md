@@ -1,4 +1,4 @@
-# Meetbrain - one-pager
+# Meetbrain - One-Pager
 
 ## The 3 hardest tradeoffs
 
