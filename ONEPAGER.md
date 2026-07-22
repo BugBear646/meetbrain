@@ -19,6 +19,40 @@
 
 ## Week 2 - and why this, not something else
 
-**Calendar ingestion (Google Calendar free API): briefs arrive, unprompted, 30 minutes before each call.** Today the rep must remember to open the tool - the biggest adoption risk in the whole design. Reading the calendar removes the last manual step: match the invitee's domain to a prospect, auto-generate, deliver by email/Slack link. It also unlocks triage *before booking* (scan tomorrow's calendar each evening), which is when a flag is actually cheap to act on.
+**Problem:** The rep has to remember to open Meetbrain before every call. That's the single biggest adoption risk in the whole design - a tool that only works when someone remembers to use it doesn't get used.
 
-Why not the alternatives: transcription (Whisper on call recordings) improves note quality but reps do not control recording consent, and pasted notes already capture the decision-relevant 20%; CRM sync (HubSpot free) is an integration tax with no new intelligence; multi-tenant auth matters for selling the product, not for proving the loop works. Week 2 goes to the step that compounds the loop: getting the brief in front of the rep without being asked.
+**Solution:** Calendar ingestion, using the Google Calendar free API (or an equivalent free-tier calendar API). Match the invitee's domain to a prospect, auto-generate the brief, deliver it 30 minutes before the call by email or Slack link - no manual step left for the rep. It also lets triage run *before* booking, by scanning tomorrow's calendar each evening, which is when a flag is still cheap to act on.
+
+**Why not the alternatives:** transcription (Whisper on call recordings) would improve note quality, but reps don't control recording consent, and pasted notes already capture the decision-relevant 20% - it's a future upgrade, not a Week 2 blocker. CRM sync (HubSpot, Salesforce) is real integration work worth doing, but it's additive - it doesn't close the adoption loop the way calendar ingestion does. Multi-tenant auth matters more for selling the product long-term than for proving the loop works this week - it belongs on the roadmap once there's a real company to onboard.
+
+## Future roadmap / alternatives
+
+**1. Multi-tenant auth and governance**
+
+**Problem:** Anyone with the URL sees every deal, and "rep name" is a free-text field, not tied to a real person - two spellings of the same rep fragment coaching signals. Today only a manager can delete a prospect; there's no edit or undo on any prospect data or memory, so a bad note merge or a wrong contact detail is stuck until someone deletes and recreates it, losing history.
+
+**Solution:** A company onboards, invites its team, and assigns each person a role (rep or manager) at invite time. The rep-name field becomes a select from that company's real user list, and access scopes by company and role. On top of that, add a proper governance layer - view, edit, and delete permissions scoped by role, so the assigned rep or their manager can correct a record instead of only a manager being able to delete it - paired with a lightweight audit trail (who changed what, when) rather than full undo.
+
+**2. CRM sync (HubSpot, Salesforce)**
+
+**Problem:** A lot of real deal activity already lives in a CRM. Without a sync, Meetbrain is a second system reps have to keep updated by hand, and deal data can drift out of step with what the CRM shows.
+
+**Solution:** Two-way sync on core fields (stage, next step, owner) with whichever CRM the company already runs, so Meetbrain sits on top of existing sales infrastructure instead of competing with it.
+
+**3. Call transcription (Whisper)**
+
+**Problem:** Pasted notes capture the decision-relevant parts of a call, but they're only as good as what the rep remembers to write down.
+
+**Solution:** Optional transcription of call recordings where the rep has consent, feeding the same merge pipeline as pasted notes. Kept optional and opt-in, since consent and recording policy vary by team and by region.
+
+**4. Configurable triage gating**
+
+**Problem:** Triage and brief generation run in parallel, so a `dont_book` verdict renders next to a brief that's already been written.
+
+**Solution:** Make enforcement a per-company setting. Some sales orgs want triage to gate brief generation outright; others want today's advisory banner. Let the customer choose rather than hardcoding one behavior.
+
+**5. Cache the company-site scrape**
+
+**Problem:** Triage and brief generation each independently scrape the same company URL on a single click.
+
+**Solution:** Cache the scrape per prospect per session (short TTL, keyed by `company_url`) so both features read the same fetch. Low priority at current volume, matters once request volume is real - halves scraper load and shaves latency off every brief.
