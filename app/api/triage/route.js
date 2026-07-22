@@ -11,9 +11,10 @@ export const dynamic = 'force-dynamic';
 export const maxDuration = 60;
 
 // Jina reader: free, keyless scraping. 8s budget, fail quiet - a dead
-// website must never block a brief.
+// website must never block a brief. Returns { text, reason } so triage
+// can explain WHY there's no company context, not just that there isn't.
 async function scrape(url) {
-  if (!url) return null;
+  if (!url) return { text: null, reason: 'no_url' };
   try {
     const target = url.startsWith('http') ? url : `https://${url}`;
     const controller = new AbortController();
@@ -23,10 +24,13 @@ async function scrape(url) {
       headers: { 'X-Return-Format': 'text' },
     });
     clearTimeout(timer);
-    if (!res.ok) return null;
-    return (await res.text()).slice(0, 6000);
-  } catch {
-    return null;
+    if (!res.ok) return { text: null, reason: 'unreachable' };
+    const text = (await res.text()).slice(0, 6000);
+    if (!text.trim()) return { text: null, reason: 'empty' };
+    return { text, reason: null };
+  } catch (err) {
+    const reason = err?.name === 'AbortError' ? 'timeout' : 'unreachable';
+    return { text: null, reason };
   }
 }
 
@@ -48,13 +52,13 @@ export async function POST(req) {
       .from('meetings').select('*').eq('prospect_id', prospect_id)
       .order('created_at', { ascending: false });
 
-    const scraped = await scrape(prospect.company_url);
-    const { system, user } = triagePrompt({ prospect, meetings: meetings || [], scraped });
+    const scrapeResult = await scrape(prospect.company_url);
+    const { system, user } = triagePrompt({ prospect, meetings: meetings || [], scraped: scrapeResult.text, scrapeReason: scrapeResult.reason });
 
     let triage;
     try {
       const { data } = await chatJSON(system, user);
-      triage = { ...data, degraded: false, used_website: Boolean(scraped), checked_at: new Date().toISOString() };
+      triage = { ...data, degraded: false, used_website: Boolean(scrapeResult.text), checked_at: new Date().toISOString() };
     } catch {
       triage = { ...fallbackTriage({ prospect, meetings: meetings || [] }), used_website: false, checked_at: new Date().toISOString() };
     }
