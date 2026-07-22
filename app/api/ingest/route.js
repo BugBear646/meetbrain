@@ -39,6 +39,20 @@ export async function POST(req) {
       newMemory = data.memory || newMemory;
       const stages = ['discovery', 'demo', 'closing', 'closed_won', 'closed_lost'];
       if (stages.includes(data.stage_suggestion)) newStage = data.stage_suggestion;
+
+      // Stage floor: a meeting that was logged means that stage was reached,
+      // regardless of outcome (no-show, cut short, etc). The LLM's
+      // stage_suggestion is trusted to move stage FORWARD or to closed_won/
+      // closed_lost, but it must never regress stage below the ordinary
+      // rank of the meeting type just held - that would silently undo the
+      // "stage tracks meeting type reached" rule if the model ever
+      // second-guesses a bad meeting.
+      const rank = { discovery: 0, demo: 1, closing: 2, closed_won: 3, closed_lost: 3 };
+      const loggedTypeRank = rank[meeting_type];
+      const newStageRank = rank[newStage];
+      if (loggedTypeRank !== undefined && (newStageRank === undefined || newStageRank < loggedTypeRank)) {
+        newStage = meeting_type;
+      }
     } catch {
       // LLM down: save raw notes (extracted stays null). The brief prompt
       // includes unprocessed notes, and the next successful ingest merges them.
