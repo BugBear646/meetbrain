@@ -30,3 +30,18 @@ export async function GET(_req, { params }) {
     return NextResponse.json({ error: 'Prospect not found.' }, { status: 404 });
   }
 }
+
+// DELETE /api/prospects/:id - removes the prospect and its meetings
+// (meetings cascade-delete via the FK in schema.sql). Used by the
+// manager view to clear out test data.
+export async function DELETE(_req, { params }) {
+  try {
+    const supa = db();
+    const { error } = await supa.from('prospects').delete().eq('id', params.id);
+    if (error) throw error;
+    return NextResponse.json({ deleted: true });
+  } catch (err) {
+    console.error('[prospect DELETE]', err.message);
+    return NextResponse.json({ error: 'Could not delete prospect.' }, { status: 500 });
+  }
+}

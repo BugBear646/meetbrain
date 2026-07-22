@@ -11,6 +11,7 @@ export default function Manager() {
   const router = useRouter();
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
+  const [deletingId, setDeletingId] = useState(null);
 
   useEffect(() => {
     fetch('/api/dashboard')
@@ -21,6 +22,27 @@ export default function Manager() {
       })
       .catch((e) => setError(e.message || 'Could not load the dashboard.'));
   }, []);
+
+  async function handleDelete(e, deal) {
+    e.stopPropagation(); // don't trigger the row's navigate-to-workspace click
+    const ok = window.confirm(`Delete ${deal.company}? This removes the prospect and all its meeting history. This can't be undone.`);
+    if (!ok) return;
+    setDeletingId(deal.id);
+    try {
+      const res = await fetch(`/api/prospects/${deal.id}`, { method: 'DELETE' });
+      if (!res.ok) throw new Error('Delete failed');
+      setData((prev) => ({
+        ...prev,
+        deals: prev.deals.filter((d) => d.id !== deal.id),
+        flagged: prev.flagged.filter((d) => d.id !== deal.id),
+        stats: { ...prev.stats, total: prev.stats.total - 1 },
+      }));
+    } catch {
+      alert('Could not delete this prospect. Try again.');
+    } finally {
+      setDeletingId(null);
+    }
+  }
 
   if (error) return <main className="wrap wide"><h1>Pipeline health</h1><div className="err">{error}</div></main>;
   if (!data) return <main className="wrap wide"><h1>Pipeline health</h1><div className="empty"><span className="spin dark" /> Loading...</div></main>;
@@ -51,7 +73,7 @@ export default function Manager() {
             <table>
               <thead>
                 <tr>
-                  <th>Signal</th><th>Company</th><th>Rep</th><th>Stage</th><th>Mtgs</th><th>Last met</th><th>Next step</th>
+                  <th>Signal</th><th>Company</th><th>Rep</th><th>Stage</th><th>Mtgs</th><th>Last met</th><th>Next step</th><th></th>
                 </tr>
               </thead>
               <tbody>
@@ -64,6 +86,18 @@ export default function Manager() {
                     <td>{d.meetings}</td>
                     <td>{d.days_since === null ? 'never' : d.days_since === 0 ? 'today' : `${d.days_since}d ago`}</td>
                     <td className={d.next_step ? '' : 'meta'}>{d.next_step || 'none booked'}</td>
+                    <td>
+                      <button
+                        type="button"
+                        className="del-btn"
+                        title={`Delete ${d.company}`}
+                        aria-label={`Delete ${d.company}`}
+                        disabled={deletingId === d.id}
+                        onClick={(e) => handleDelete(e, d)}
+                      >
+                        {deletingId === d.id ? '...' : '✕'}
+                      </button>
+                    </td>
                   </tr>
                 ))}
               </tbody>
