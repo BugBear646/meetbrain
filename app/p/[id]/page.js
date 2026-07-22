@@ -156,10 +156,20 @@ export default function Workspace({ params }) {
           )}
           <p className="label">
             Your brief · {meetingType}
-            {' · '}
-            <span className={brief.used_website ? 'src-ok' : 'src-none'}>
-              {brief.used_website ? 'used live company website' : 'no company website used'}
-            </span>
+            {brief.degraded ? null : (
+              <>
+                {' · '}
+                <span className={brief.used_website ? 'src-ok' : 'src-none'}>
+                  {brief.used_website
+                    ? 'used live company website'
+                    : brief.scrape_reason === 'no_url'
+                    ? 'no company website provided'
+                    : brief.scrape_reason === 'empty'
+                    ? 'company website had no usable content'
+                    : 'company website could not be reached'}
+                </span>
+              </>
+            )}
           </p>
           <p className="brief-headline">{brief.headline}</p>
 

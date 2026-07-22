@@ -33,7 +33,7 @@ export async function POST(req) {
     });
     try {
       const { data, provider } = await chatJSON(system, user);
-      return NextResponse.json({ brief: { ...data, degraded: false, used_website: Boolean(scrapeResult.text) }, provider });
+      return NextResponse.json({ brief: { ...data, degraded: false, used_website: Boolean(scrapeResult.text), scrape_reason: scrapeResult.reason }, provider });
     } catch {
       // Whole LLM chain down: render straight from memory, clearly labeled.
       const brief = fallbackBrief({ prospect, meetings: meetings || [], meetingType: meeting_type });
