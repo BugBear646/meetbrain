@@ -78,7 +78,7 @@ Or you can copy paste your .env.local file directly there to pull the variables.
 |---|---|---|
 | Vercel (Hobby) | 100 GB-hrs functions, 60s max duration | Function invocations are effectively unlimited for this workload; 60s cap could clip a slow LLM call - our 25s per-provider timeout stays well inside it. |
 | Supabase (Free) | 500 MB database, pauses after 7 days inactivity | **This breaks first in a demo setting**: the project pauses after a week idle - open the dashboard to wake it. At real scale, row counts are trivial (text only); 500 MB fits years of notes. |
-| Groq | ~14,400 requests/day, 6,000 tokens/min on llama-3.3-70b | **This breaks first in real usage.** A 10-rep team doing 12 meetings/wk each = ~360 LLM calls/wk - fine on requests, but token/min bursts at 9am Monday can 429. That is exactly why the chain falls to OpenRouter. |
+| Groq (`llama-3.3-70b-versatile`) | 30 req/min, 1,000 req/day, 12,000 tokens/min, 100,000 tokens/day | **This breaks first in real usage.** A 10-rep team doing 12 meetings/wk each = ~360 LLM calls/wk - fine on requests, but token/min bursts at 9am Monday can 429. That is exactly why the chain falls to OpenRouter. |
 | OpenRouter (`:free` models) | ~50 req/day without credits | Fallback only. If both throttle, the app renders briefs deterministically from memory - degraded but never down. |
 | Jina Reader (r.jina.ai) | Keyless, rate-limited by IP (~20 rpm) | Only called on triage for prospects with a URL, and cached until new notes arrive. A dead or slow site fails silently after 8s and never blocks a brief. |
 
